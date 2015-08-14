@@ -323,12 +323,16 @@ option_t<session_t> * session_t::lookup_option(const char * p)
     OPT(download); // -Q
     else OPT(decimal_comma);
     else OPT(day_break);
+    else OPT(dont_save);
     break;
   case 'e':
     OPT(explicit);
     break;
   case 'f':
     OPT_(file_); // -f
+    break;
+  case 'g':
+    OPT(getquote_);
     break;
   case 'i':
     OPT(input_date_format_);

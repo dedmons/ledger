@@ -81,10 +81,8 @@ public:
   optional<path> price_db;      // --price-db=
   long           quote_leeway;  // --leeway=
   bool           get_quotes;    // --download
-
-  function<optional<price_point_t>
-           (commodity_t& commodity, const commodity_t * in_terms_of)>
-      get_commodity_quote;
+  string         get_quote_path; // --getquotes
+  bool           dont_save;     // --dont-save
 
   static shared_ptr<commodity_pool_t> current_pool;
 
@@ -109,6 +107,8 @@ public:
   annotated_commodity_t * create(commodity_t& comm,
                                  const annotation_t& details);
 
+  optional<price_point_t> get_commodity_quote(commodity_t& commodity, const commodity_t * in_terms_of);
+  
   // Exchange one commodity for another, while recording the factored price.
 
   void exchange(commodity_t&      commodity,

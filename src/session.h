@@ -100,6 +100,8 @@ public:
     HANDLER(check_payees).report(out);
     HANDLER(day_break).report(out);
     HANDLER(download).report(out);
+    HANDLER(getquote_).report(out);
+    HANDLER(dont_save).report(out);
     HANDLER(decimal_comma).report(out);
     HANDLER(time_colon).report(out);
     HANDLER(file_).report(out);
@@ -128,6 +130,8 @@ public:
   OPTION(session_t, check_payees);
   OPTION(session_t, day_break);
   OPTION(session_t, download); // -Q
+  OPTION(session_t, getquote_);
+  OPTION(session_t, dont_save);
 
   OPTION_(session_t, decimal_comma, DO() {
       commodity_t::decimal_comma_by_default = true;

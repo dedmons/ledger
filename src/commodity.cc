@@ -184,6 +184,7 @@ commodity_t::check_for_updated_price(const optional<price_point_t>& point,
                                      const datetime_t&   moment,
                                      const commodity_t*  in_terms_of)
 {
+  DEBUG("commodity.download", "Checking for updated price for " << referent().symbol());
   if (pool().get_quotes && ! has_flags(COMMODITY_NOMARKET)) {
     bool exceeds_leeway = true;
 

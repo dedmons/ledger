@@ -45,7 +45,8 @@ shared_ptr<commodity_pool_t> commodity_pool_t::current_pool;
 commodity_pool_t::commodity_pool_t()
   : default_commodity(NULL), keep_base(false),
     quote_leeway(86400), get_quotes(false),
-    get_commodity_quote(commodity_quote_from_script)
+    get_quote_path("getquote"), dont_save(false)
+    //    get_commodity_quote(commodity_quote_from_script)
 {
   null_commodity = create("");
   null_commodity->add_flags(COMMODITY_BUILTIN | COMMODITY_NOMARKET);
@@ -219,6 +220,11 @@ commodity_pool_t::create(commodity_t&        comm,
   return commodity.get();
 }
 
+optional<price_point_t> commodity_pool_t::get_commodity_quote(commodity_t& commodity, const commodity_t * in_terms_of)
+{
+  return commodity_quote_from_script(get_quote_path, commodity, in_terms_of);
+}
+  
 void commodity_pool_t::exchange(commodity_t&      commodity,
                                 const amount_t&   per_unit_cost,
                                 const datetime_t& moment)

@@ -35,24 +35,27 @@
 #include "commodity.h"
 #include "pool.h"
 #include "quotes.h"
+#include "utils.h"
 
 namespace ledger {
 
 optional<price_point_t>
-commodity_quote_from_script(commodity_t& commodity,
+commodity_quote_from_script(string script_path,
+                            commodity_t& commodity,
                             const commodity_t * exchange_commodity)
 {
-  DEBUG("commodity.download", "downloading quote for symbol " << commodity.symbol());
+  DEBUG("commodity.download", "downloading quote for symbol " << commodity.symbol() << " using script at " << script_path);
 #if DEBUG_ON
   if (exchange_commodity)
     DEBUG("commodity.download",
           "  in terms of commodity " << exchange_commodity->symbol());
 #endif
-
+  
   char buf[256];
   buf[0] = '\0';
 
-  string getquote_cmd("getquote \"");
+  string getquote_cmd(script_path);
+  getquote_cmd += " \"";
   getquote_cmd += commodity.symbol();
   getquote_cmd += "\" \"";
   if (exchange_commodity)
@@ -78,12 +81,13 @@ commodity_quote_from_script(commodity_t& commodity,
 
     if (optional<std::pair<commodity_t *, price_point_t> > point =
         commodity_pool_t::current_pool->parse_price_directive(buf)) {
-      if (commodity_pool_t::current_pool->price_db) {
+      path price_db_path = resolve_path(commodity_pool_t::current_pool->price_db.get());
+      if (exists(price_db_path) && ! commodity_pool_t::current_pool->dont_save) {
 #if defined(__GNUG__) && __GNUG__ < 3
-        ofstream database(*commodity_pool_t::current_pool->price_db,
+        ofstream database(price_db_path,
                           ios::out | ios::app);
 #else
-        ofstream database(*commodity_pool_t::current_pool->price_db,
+        ofstream database(price_db_path,
                           std::ios_base::out | std::ios_base::app);
 #endif
         database << "P "
