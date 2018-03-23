@@ -1690,11 +1690,10 @@ post_t * instance_t::parse_post(char *          line,
 
       if (post->amount.is_null()) {
         // balance assignment
-        if (! diff.is_zero()) {
-          post->amount = diff;
-          DEBUG("textual.parse", "line " << context.linenum << ": "
-                << "Overwrite null posting");
-        }
+        // Always asign, even if zero
+        post->amount = diff;
+        DEBUG("textual.parse", "line " << context.linenum << ": "
+              << "Overwrite null posting");
       } else {
         // balance assertion
         diff -= post->amount;
